@@ -123,7 +123,7 @@ class ModelMixin(object):
         User.modify(name='kevin')
     """
 
-    def modify(self, extra_updates=(), refresh=False, **fields):
+    def modify(self, extra_updates=(), refresh=False, exclude=(), **fields):
         """ 只修改指定域。specify fields to update.
 
         Examples::
@@ -133,6 +133,7 @@ class ModelMixin(object):
         for field, value in fields.items():
             setattr(self, field, value)
         update_fields = list(extra_updates) + list(fields.keys())
+        self.full_clean(exclude=exclude)
         self.save(update_fields=update_fields)
         if refresh:
             self.refresh_from_db(fields=update_fields)
